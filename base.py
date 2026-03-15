@@ -1,5 +1,6 @@
 from fastapi import APIRouter, FastAPI
 from pydantic import BaseModel
+import create_profile
 
 app = FastAPI()
 # Create a router instance
@@ -20,21 +21,45 @@ async def read_item(item_id: int):
 # Include the router in the app
 app.include_router(router)
 
-class UserCreate(BaseModel):
-    user_id: int
-    username: str
 @app.post("/create_user/")
-
-async def create_user(user_data: UserCreate):
-    user_id = user_data.user_id
-    username = user_data.username
+async def user_profile(user_data: create_profile.CreateProfile):
+    '''
+    Purpose: This function creates a user's profile.
+    Parameters: name, age, pronouns, location
+    Example Input:
+        {
+          "Name": "Kina",
+          "Age": 21,
+          "Pronouns": "they/she",
+          "Location": "Cityville"
+        }
+    Example Output:
+        {
+          "Message": "Created User Profile! ",
+          "data": { "Name": "Kina",  "Age": 21, "Pronouns": "they/she", "Location": "Cityville"}
+        }
+    '''    
+    name = user_data.name
+    age = user_data.age
+    pronouns = user_data.pronouns
+    location = user_data.location
     return {
-        "msg": "we got data succesfully",
-        "user_id": user_id,
-        "username": username,
+        "Message": "Created User Profile! ",
+        "Name": name,
+        "Age": age,
+        "Pronouns": pronouns,
+        "Location": location
     }
 
 if __name__ == "__main__":
     import uvicorn
 
     uvicorn.run(app, host="127.0.0.1", port=8000)
+    '''
+    uvicorn.run(
+        app=demo_app(),
+        port=8000,
+        reload=False,
+        loop="uvloop",
+    )
+    '''
