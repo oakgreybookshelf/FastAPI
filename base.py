@@ -2,7 +2,11 @@ from fastapi import APIRouter, FastAPI
 from pydantic import BaseModel
 import create_profile
 
-app = FastAPI()
+app = FastAPI(
+    title="Interactive Dating App",
+    description="This is the basis for interacting with a dating application using FastAPI",
+    version="1.0.0"
+)
 # Create a router instance
 router = APIRouter(
     prefix="/items",
