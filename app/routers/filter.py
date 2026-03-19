@@ -7,13 +7,23 @@ router = APIRouter(
     responses={404: {"description": "Not found"}},
 )
 
-@router.get("/")
-async def read_items():
-    return [{"name": "Item 1"}, {"name": "Item 2"}]
-    
-@router.get("/{item_id}")
-async def read_item(item_id: int):
-    return {"item_id": item_id, "name": f"Item {item_id}"}
+@router.get("/filter")
+async def read_items(name: Optional[str] = None, age: Optional[int] = None,
+                    pronouns: Optional[str] = None, location: Optional[str] = None
+                    ):
+    """
+    - returns 422 Unprocessable Entity error if q is empty
+    """
+    filters = {}
+    if name:
+        filters["name"] = name
+    if age:
+        filters["age"] = age
+    if pronouns:
+        filters["pronouns"] = pronouns
+    if location:
+        filters["location"] = location
+    return {"results": name, age, pronouns, location}
 
 @router.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
